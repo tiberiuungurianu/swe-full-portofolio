@@ -9,7 +9,7 @@ type ProjectExplorerProps = {
   /** Project records from `src/content/projects.ts`. */
   projects: Project[];
   /**
-   * Slug from the URL (`/projects/rfp-finder`).
+   * Slug from the URL (`/projects/pennypilot`).
    * When it is missing or unknown, the first project opens instead.
    */
   initialSlug?: string;
