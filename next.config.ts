@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Required by OpenNext on Cloudflare Workers.
+  output: "standalone",
   // Production hardening. Policy: internal/deployment-privacy-rules.md
   productionBrowserSourceMaps: false,
   enablePrerenderSourceMaps: false,
