@@ -66,10 +66,10 @@ This app deploys with OpenNext on Cloudflare Workers. The Worker name in `wrangl
 
 In Workers Builds set:
 
-- Build command: `npx opennextjs-cloudflare build`
-- Deploy command: `npx opennextjs-cloudflare deploy`
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy`
 
-Do not use bare `npx wrangler deploy` as the only step. That command expects the OpenNext output under `.open-next/`.
+`npm run build` already runs Next.js, hardening, verify, and the OpenNext Worker bundle under `.open-next/`.
 
 Add the server secrets as Cloudflare Worker secrets or Build variables: `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, and `GUESTBOOK_MODERATION_SECRET`.
 

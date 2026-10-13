@@ -62,7 +62,7 @@ The application host is Cloudflare Workers via OpenNext (`@opennextjs/cloudflare
 
 When Workers Builds is connected, set:
 
-- Build command: `npx opennextjs-cloudflare build`
-- Deploy command: `npx opennextjs-cloudflare deploy`
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy`
 
-`opennextjs-cloudflare build` runs `npm run build`, which still hardens and verifies the Next.js output. A deploy command of bare `npx wrangler deploy` without the OpenNext step is incorrect: it can invent a mismatched `WORKER_SELF_REFERENCE` from `package.json` and fail with Cloudflare error 10143.
+`npm run build` hardens and verifies the Next.js output, then runs `opennextjs-cloudflare build --skipNextBuild` so `.open-next/` exists before Wrangler deploys. The Worker name and `WORKER_SELF_REFERENCE` in `wrangler.jsonc` must both be `swe-full-portofolio`.
