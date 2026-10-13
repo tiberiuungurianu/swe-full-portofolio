@@ -50,7 +50,7 @@ export default async function GuestbookPage({
 }: PageProps<"/guestbook">) {
   const [messages, storage, firstName, params] = await Promise.all([
     listApprovedMessages(),
-    Promise.resolve(getGuestbookStorageMode()),
+    getGuestbookStorageMode(),
     getGuestbookFirstName(),
     searchParams,
   ]);

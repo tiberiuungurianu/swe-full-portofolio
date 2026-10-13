@@ -9,23 +9,43 @@ import type {
 } from "./types";
 
 /**
- * LOCAL / DEV guestbook persistence.
+ * Guestbook persistence.
  *
- * Messages are stored in a JSON file under `data/` on the server filesystem.
- * This is intentionally labelled as a local/dev path — not a multi-instance
- * production database. See README and the portfolio handover for how to wire
- * a hosted store later. Do not treat browser localStorage as shared storage.
+ * Local Node: JSON file under `data/`.
+ * Cloudflare Workers: in-memory fallback when the filesystem rejects writes.
+ * Neither path is a production multi-instance database. Wire KV/D1 later.
  */
 const DATA_DIR = path.join(process.cwd(), "data");
 const STORE_PATH = path.join(DATA_DIR, "guestbook.json");
 const TMP_PATH = path.join(DATA_DIR, "guestbook.json.tmp");
 
-const emptyStore = (): GuestbookStoreFile => ({
-  version: 1,
-  messages: [],
-});
+type StoreMode = "file" | "memory";
 
-async function ensureStore(): Promise<GuestbookStoreFile> {
+let mode: StoreMode | null = null;
+let memoryStore: GuestbookStoreFile = emptyStore();
+
+function emptyStore(): GuestbookStoreFile {
+  return {
+    version: 1,
+    messages: [],
+  };
+}
+
+function isUnavailableFilesystem(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const code = "code" in error ? String(error.code) : "";
+  return (
+    code === "EPERM" ||
+    code === "EROFS" ||
+    code === "ENOTSUP" ||
+    code === "EINVAL" ||
+    /operation not permitted/i.test(
+      "message" in error ? String(error.message) : "",
+    )
+  );
+}
+
+async function readFileStore(): Promise<GuestbookStoreFile> {
   await mkdir(DATA_DIR, { recursive: true });
 
   try {
@@ -37,15 +57,48 @@ async function ensureStore(): Promise<GuestbookStoreFile> {
     return parsed;
   } catch {
     const store = emptyStore();
-    await atomicWrite(store);
+    await writeFileStore(store);
     return store;
   }
 }
 
-async function atomicWrite(store: GuestbookStoreFile): Promise<void> {
+async function writeFileStore(store: GuestbookStoreFile): Promise<void> {
   await mkdir(DATA_DIR, { recursive: true });
   await writeFile(TMP_PATH, `${JSON.stringify(store, null, 2)}\n`, "utf8");
   await rename(TMP_PATH, STORE_PATH);
+}
+
+async function ensureStore(): Promise<GuestbookStoreFile> {
+  if (mode === "memory") {
+    return memoryStore;
+  }
+
+  try {
+    const store = await readFileStore();
+    mode = "file";
+    return store;
+  } catch (error) {
+    if (!isUnavailableFilesystem(error)) throw error;
+    mode = "memory";
+    memoryStore = emptyStore();
+    return memoryStore;
+  }
+}
+
+async function persistStore(store: GuestbookStoreFile): Promise<void> {
+  if (mode === "memory") {
+    memoryStore = store;
+    return;
+  }
+
+  try {
+    await writeFileStore(store);
+    mode = "file";
+  } catch (error) {
+    if (!isUnavailableFilesystem(error)) throw error;
+    mode = "memory";
+    memoryStore = store;
+  }
 }
 
 export async function listApprovedMessages(): Promise<GuestbookMessage[]> {
@@ -79,7 +132,7 @@ export async function createPendingMessage(input: {
     createdAt: new Date().toISOString(),
   };
   store.messages.push(entry);
-  await atomicWrite(store);
+  await persistStore(store);
   return entry;
 }
 
@@ -99,15 +152,26 @@ export async function moderateMessage(
     moderatedAt: new Date().toISOString(),
   };
   store.messages[index] = updated;
-  await atomicWrite(store);
+  await persistStore(store);
   return updated;
 }
 
-export function getGuestbookStorageMode(): {
-  mode: "local-dev-file";
+export async function getGuestbookStorageMode(): Promise<{
+  mode: "local-dev-file" | "worker-memory";
   path: string;
   label: string;
-} {
+}> {
+  await ensureStore();
+
+  if (mode === "memory") {
+    return {
+      mode: "worker-memory",
+      path: "in-memory",
+      label:
+        "Worker memory store. Notes do not survive across isolates. Replace with KV or D1 for production.",
+    };
+  }
+
   return {
     mode: "local-dev-file",
     path: "data/guestbook.json",

@@ -62,7 +62,7 @@ For production hosting, replace the file store with a shared database and keep v
 
 ## Cloudflare Workers
 
-This app deploys with OpenNext on Cloudflare Workers. The Worker name in `wrangler.jsonc` is `swe-full-portofolio`, matching the Cloudflare project.
+This app deploys with OpenNext on Cloudflare Workers. The Worker name in `wrangler.jsonc` is `swe-full-portofolio`, matching the Cloudflare project. Keep Next.js on `16.3.8` until `@opennextjs/cloudflare` supports `16.4` (`preview-props.json` otherwise crashes the Worker with Error 1101).
 
 In Workers Builds set:
 

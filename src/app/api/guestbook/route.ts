@@ -21,10 +21,13 @@ function clientKey(request: NextRequest): string {
 }
 
 export async function GET() {
-  const messages = await listApprovedMessages();
+  const [messages, storage] = await Promise.all([
+    listApprovedMessages(),
+    getGuestbookStorageMode(),
+  ]);
   return NextResponse.json({
     messages,
-    storage: getGuestbookStorageMode(),
+    storage,
   });
 }
 
@@ -74,7 +77,7 @@ export async function POST(request: NextRequest) {
       ok: true,
       detail:
         "Thanks — your note was submitted for review and will appear once approved.",
-      storage: getGuestbookStorageMode(),
+      storage: await getGuestbookStorageMode(),
     },
     { status: 201 },
   );
