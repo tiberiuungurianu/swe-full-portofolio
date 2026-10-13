@@ -7,10 +7,7 @@ import {
   getGuestbookFirstName,
   isGoogleSignInConfigured,
 } from "@/lib/guestbook/session";
-import {
-  getGuestbookStorageMode,
-  listApprovedMessages,
-} from "@/lib/guestbook/store";
+import { listApprovedMessages } from "@/lib/guestbook/store";
 
 export const metadata: Metadata = {
   title: "guestbook",
@@ -48,9 +45,8 @@ function signInPrompt(error: string | undefined): {
 export default async function GuestbookPage({
   searchParams,
 }: PageProps<"/guestbook">) {
-  const [messages, storage, firstName, params] = await Promise.all([
+  const [messages, firstName, params] = await Promise.all([
     listApprovedMessages(),
-    getGuestbookStorageMode(),
     getGuestbookFirstName(),
     searchParams,
   ]);
@@ -59,10 +55,7 @@ export default async function GuestbookPage({
 
   return (
     <div className="page">
-      <GuestbookIntro
-        storageLabel={storage.label}
-        storagePath={storage.path}
-      />
+      <GuestbookIntro />
 
       <section className="guestbook-board" aria-labelledby="notes-heading">
         <h2 className="section-heading" id="notes-heading">
