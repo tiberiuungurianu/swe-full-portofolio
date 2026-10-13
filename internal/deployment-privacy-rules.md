@@ -58,8 +58,11 @@ The guestbook sign-in asks Google for `openid` and `profile` only. The stored no
 
 ## Hosting
 
-The git remote is Cursor Origin (`origin.cursor.com`). That is a git host, not an application host. This repository has no Vercel, Netlify, GitHub Actions, Docker, or other deploy pipeline.
+The application host is Cloudflare Workers via OpenNext (`@opennextjs/cloudflare`). The Worker name is `swe-full-portofolio` in `wrangler.jsonc`. The git remotes may include GitHub and Cursor Origin; those are source hosts, not the app host.
 
-When a host is connected, set its build command to `npm run build` so a failed check prevents publication. A build command of plain `next build` skips hardening and verification. Leave the start command as `npm start`.
+When Workers Builds is connected, set:
 
-Publishing is not automatic until that host setting is in place and has been confirmed.
+- Build command: `npx opennextjs-cloudflare build`
+- Deploy command: `npx opennextjs-cloudflare deploy`
+
+`opennextjs-cloudflare build` runs `npm run build`, which still hardens and verifies the Next.js output. A deploy command of bare `npx wrangler deploy` without the OpenNext step is incorrect: it can invent a mismatched `WORKER_SELF_REFERENCE` from `package.json` and fail with Cloudflare error 10143.

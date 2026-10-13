@@ -60,6 +60,19 @@ curl -X POST \
 
 For production hosting, replace the file store with a shared database and keep validation, moderation and rate limiting server-side. Do not use browser `localStorage` as shared storage.
 
+## Cloudflare Workers
+
+This app deploys with OpenNext on Cloudflare Workers. The Worker name in `wrangler.jsonc` is `swe-full-portofolio`, matching the Cloudflare project.
+
+In Workers Builds set:
+
+- Build command: `npx opennextjs-cloudflare build`
+- Deploy command: `npx opennextjs-cloudflare deploy`
+
+Do not use bare `npx wrangler deploy` as the only step. That command expects the OpenNext output under `.open-next/`.
+
+Add the server secrets as Cloudflare Worker secrets or Build variables: `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, and `GUESTBOOK_MODERATION_SECRET`.
+
 ## Content
 
 Edit:
