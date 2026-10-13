@@ -1,9 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Newsreader, Source_Sans_3 } from "next/font/google";
 
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
+import { Footer } from "@/components/Footer";
+import { InspectJoke } from "@/components/InspectJoke";
+import { IntroBootScript } from "@/components/IntroBootScript";
+import { Navbar } from "@/components/Navbar";
+import { TerminalIntro } from "@/components/TerminalIntro";
 import { profile } from "@/content/profile";
+import { siteOrigin } from "@/lib/site";
 
 import "./globals.css";
 
@@ -20,6 +24,7 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteOrigin()),
   title: {
     default: `${profile.name} — software engineer`,
     template: `%s — ${profile.name}`,
@@ -43,8 +48,14 @@ export const metadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: [{ url: "/tu-monogram.svg", type: "image/svg+xml" }],
+    icon: [{ url: "/tu-monogram.png", type: "image/png" }],
+    apple: [{ url: "/tu-monogram.png", type: "image/png" }],
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#111111",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -52,16 +63,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en-GB"
       className={`${newsreader.variable} ${sourceSans.variable} h-full`}
+      suppressHydrationWarning
     >
       <body className="site-shell antialiased">
+        <IntroBootScript />
         <a className="skip-link" href="#main">
           Skip to content
         </a>
-        <SiteHeader />
-        <main id="main" className="site-main">
+        <Navbar />
+        <main id="main" className="site-main" tabIndex={-1}>
           {children}
         </main>
-        <SiteFooter />
+        <Footer />
+        <TerminalIntro />
+        <InspectJoke />
       </body>
     </html>
   );

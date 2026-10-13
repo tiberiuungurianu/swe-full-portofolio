@@ -13,21 +13,10 @@ export type EducationItem = {
   organisation: string;
   period: string;
   detail: string;
+  logo: string;
 };
 
 export const experience: ExperienceItem[] = [
-  {
-    id: "third-wave",
-    role: "Graduate Developer",
-    organisation: "Third Wave Identity Ltd.",
-    period: "November 2025 – present",
-    summary:
-      "Identity and access management engineering: automation, testing and platform enhancements for IAM delivery work.",
-    highlights: [
-      "Working across identity engineering workflows rather than client-named engagements.",
-      "Focus on reliable automation, verification and maintainable platform changes.",
-    ],
-  },
   {
     id: "bubbled",
     role: "Founder’s Associate Intern",
@@ -58,6 +47,7 @@ export const education: EducationItem[] = [
     period: "2025",
     detail:
       "Final-year work included full-stack engineering, cybersecurity practice and research into sustainable website design.",
+    logo: "/logos/london-met.png",
   },
   {
     id: "kcl",
@@ -66,5 +56,6 @@ export const education: EducationItem[] = [
     period: "Prior study",
     detail:
       "Undergraduate Computer Science study with an Undergraduate Certificate. Not a completed King’s bachelor’s degree.",
+    logo: "/logos/kings-college-london.png",
   },
 ];

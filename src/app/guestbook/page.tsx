@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 
 import { GuestbookForm } from "@/components/GuestbookForm";
 import { GuestbookList } from "@/components/GuestbookList";
+import { GuestbookIntro } from "@/components/sections";
+import {
+  getGuestbookFirstName,
+  isGoogleSignInConfigured,
+} from "@/lib/guestbook/session";
 import {
   getGuestbookStorageMode,
   listApprovedMessages,
@@ -15,58 +20,64 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function GuestbookPage() {
-  const messages = await listApprovedMessages();
-  const storage = getGuestbookStorageMode();
+function signInPrompt(error: string | undefined): {
+  open: boolean;
+  notice: string | null;
+} {
+  switch (error) {
+    case "config":
+      return {
+        open: true,
+        notice: "Google sign-in is not set up on this server yet.",
+      };
+    case "name":
+      return {
+        open: true,
+        notice: "Google did not share a first name, so the note cannot be signed.",
+      };
+    case "signin":
+      return {
+        open: true,
+        notice: "Google sign-in did not complete. Please try again.",
+      };
+    default:
+      return { open: false, notice: null };
+  }
+}
+
+export default async function GuestbookPage({
+  searchParams,
+}: PageProps<"/guestbook">) {
+  const [messages, storage, firstName, params] = await Promise.all([
+    listApprovedMessages(),
+    Promise.resolve(getGuestbookStorageMode()),
+    getGuestbookFirstName(),
+    searchParams,
+  ]);
+  const error = typeof params.error === "string" ? params.error : undefined;
+  const prompt = firstName ? { open: false, notice: null } : signInPrompt(error);
 
   return (
     <div className="page">
-      <section className="section" aria-labelledby="guestbook-heading">
-        <h1 className="section-heading" id="guestbook-heading">
-          leave a note
-        </h1>
-        <p className="section-intro">
-          Say hello, share a thought, or leave project feedback. Notes are held
-          for moderation and only appear here once approved. No account is
-          required.
-        </p>
+      <GuestbookIntro
+        storageLabel={storage.label}
+        storagePath={storage.path}
+      />
 
-        <div className="callout" role="note">
-          <p>
-            <strong>Storage mode:</strong> {storage.label} Path:{" "}
-            <code>{storage.path}</code>.
-          </p>
-          <p>
-            This local/dev implementation persists on the server filesystem.
-            Configure a hosted database and{" "}
-            <code>GUESTBOOK_MODERATION_SECRET</code> before treating submissions
-            as production-ready. Browser localStorage is not used as shared
-            storage.
-          </p>
+      <section className="guestbook-board" aria-labelledby="notes-heading">
+        <h2 className="section-heading" id="notes-heading">
+          messages
+        </h2>
+        <GuestbookList messages={messages} />
+        <div className="guestbook-sign">
+          <GuestbookForm
+            firstName={firstName}
+            googleReady={isGoogleSignInConfigured()}
+            initiallyOpen={prompt.open}
+            notice={prompt.notice}
+          />
         </div>
       </section>
-
-      <div className="guestbook-layout">
-        <section aria-labelledby="write-heading">
-          <h2 className="section-heading" id="write-heading">
-            write
-          </h2>
-          <GuestbookForm />
-          <p className="privacy-note">
-            Privacy: the site stores the display name, message text, submission
-            time and moderation status. Email addresses are not collected on
-            this form and are never shown publicly. Rate limiting applies per
-            client address.
-          </p>
-        </section>
-
-        <section aria-labelledby="notes-heading">
-          <h2 className="section-heading" id="notes-heading">
-            approved notes
-          </h2>
-          <GuestbookList messages={messages} />
-        </section>
-      </div>
     </div>
   );
 }

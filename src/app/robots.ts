@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 
+import { siteOrigin } from "@/lib/site";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
@@ -7,5 +9,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/"],
     },
+    sitemap: `${siteOrigin()}/sitemap.xml`,
   };
 }

@@ -28,15 +28,18 @@ npm run build
 The guestbook is a **labelled local/dev implementation**:
 
 - Persists approved/pending/rejected notes in `data/guestbook.json` (server filesystem).
-- Public `POST /api/guestbook` validates input and rate-limits submissions.
+- Visitors sign in with Google. The public note stores their first name only. The email scope is not requested, and email is never written to the store.
+- Public `POST /api/guestbook` requires the signed-in session, validates the message, and rate-limits submissions. A name sent in the request body is ignored.
 - Only **approved** notes are shown.
 - Moderation uses `GUESTBOOK_MODERATION_SECRET` (Bearer token), not a hidden URL alone.
 
-Copy `.env.example` to `.env.local` and set a secret:
+Copy `.env.example` to `.env.local` and set a moderation secret plus Google OAuth:
 
 ```bash
 cp .env.example .env.local
 ```
+
+Google Cloud needs an OAuth client of type Web application. Add both redirect URIs: `http://localhost:4327/api/auth/google/callback` for local development and `https://tiberiuungurianu.com/api/auth/google/callback` for the deployed site. Set `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, and `AUTH_SECRET`. The app chooses the origin from the deploy variant. Set `AUTH_URL` only when the live origin should be something other than `https://tiberiuungurianu.com`.
 
 List all notes (including pending):
 
@@ -70,6 +73,6 @@ Branding asset: `public/tu-monogram.svg` (also used as favicon).
 ## Notes
 
 - British English throughout.
-- Production domain is not set; sitemap uses a placeholder host until one is chosen.
+- The live site origin is `https://tiberiuungurianu.com`. Local development uses the dev server origin.
 - Public email and CV download are intentionally omitted until real destinations exist.
 - This site is separate from tiberiu.online.

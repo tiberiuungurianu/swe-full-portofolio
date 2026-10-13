@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 4327",
-    "build": "next build",
+    "build": "next build && node scripts/harden-deploy-output.mjs && node scripts/verify-deploy.mjs",
+    "verify:deploy": "node scripts/verify-deploy.mjs",
     "start": "next start --port 4327",
     "lint": "eslint"
   },

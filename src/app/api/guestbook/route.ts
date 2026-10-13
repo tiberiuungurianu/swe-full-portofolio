@@ -6,7 +6,8 @@ import {
   getGuestbookStorageMode,
   listApprovedMessages,
 } from "@/lib/guestbook/store";
-import { validateGuestbookInput } from "@/lib/guestbook/validation";
+import { readSessionToken, sessionCookie } from "@/lib/guestbook/session";
+import { validateGuestbookMessage } from "@/lib/guestbook/validation";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -48,15 +49,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  const parsed = validateGuestbookInput(
-    (body ?? {}) as { name?: unknown; message?: unknown },
+  const firstName = readSessionToken(request.cookies.get(sessionCookie.name)?.value);
+  if (!firstName) {
+    return NextResponse.json(
+      { error: "Sign in with Google before leaving a note." },
+      { status: 401 },
+    );
+  }
+
+  const parsed = validateGuestbookMessage(
+    (body as { message?: unknown } | null)?.message,
   );
   if (!parsed.ok) {
     return NextResponse.json({ error: parsed.error }, { status: 400 });
   }
 
   await createPendingMessage({
-    name: parsed.name,
+    name: firstName,
     message: parsed.message,
   });
 

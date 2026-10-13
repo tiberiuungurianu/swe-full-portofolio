@@ -1,8 +1,14 @@
 type MonogramProps = {
+  /** Extra classes. Defaults to a small square so the mark fits a header. */
   className?: string;
+  /** Accessible name for the TU mark. Visible text is the SVG itself. */
   title?: string;
 };
 
+/**
+ * Original TU monogram.
+ * The filled paths are the letterforms; the faint stroke under them is decoration only.
+ */
 export function Monogram({
   className = "h-8 w-8",
   title = "tu monogram",

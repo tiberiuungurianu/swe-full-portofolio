@@ -1,5 +1,9 @@
-/** One original decorative motif used sparingly — a faint ruled understroke. */
-export function DecorativeMotif({ className = "" }: { className?: string }) {
+type DecorativeMotifProps = {
+  className?: string;
+};
+
+/** Faint ruled underline used as a spare decoration. Hidden from screen readers. */
+export function DecorativeMotif({ className = "" }: DecorativeMotifProps) {
   return (
     <svg
       className={`motif ${className}`.trim()}

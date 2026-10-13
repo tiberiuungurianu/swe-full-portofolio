@@ -10,20 +10,21 @@ export const profile = {
   monogramLabel: "tu",
   shortIntro: "hi, i’m tiberiu.",
   positioning:
-    "A software engineer working in cybersecurity, with a passion for algorithms, finance and building things.",
+    "A software engineer with a passion for algorithms, finance and building things.",
   location: "London, United Kingdom",
-  focus:
-    "Software engineering is the main focus. Cybersecurity and identity engineering sit alongside professional experience in building reliable systems.",
   bio: [
-    "I am a software engineer based in London. My work sits at the intersection of product engineering, identity and access management, and practical cybersecurity.",
-    "I care about clear systems, careful testing and software that stays maintainable under real constraints — whether that means an identity pipeline, a research prototype or a small product MVP.",
-    "Outside day-to-day delivery I keep returning to algorithms, finance-shaped problems and research into sustainable web engineering.",
+    "I’m a London-based software engineer with a particular interest in cybersecurity, algorithms and finance.",
+    "I enjoy figuring out how things work and building tools that make my life easier.",
   ],
+  bioAside:
+    "(Usually because something repetitive has annoyed me enough to automate it, tehehe.)",
+  research:
+    "My final-year research explored how websites can be designed and built more sustainably. I developed a framework to support this, and the research was later published at IEEE in 2026 and was presented at SNAMS 2025.",
   skills: {
     languages: ["Python", "Java", "C++", "SQL", "C#"],
     frameworks: ["React / TypeScript", "Spring Boot", "FastAPI", "ASP.NET MVC"],
     platforms: ["PostgreSQL", "Docker", "Git", "Linux"],
-    domains: ["Identity engineering", "Cybersecurity engineering"],
+    domains: ["Cybersecurity engineering"],
   },
   publication: {
     title:

@@ -1,20 +1,19 @@
 import type { MetadataRoute } from "next";
 
 import { projects } from "@/content/projects";
+import { siteOrigin } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/projects", "/about", "/guestbook"].map(
-    (path) => ({
-      url: `https://example.invalid${path || "/"}`,
-      lastModified: new Date(),
-    }),
-  );
-
-  const projectRoutes = projects.map((project) => ({
-    url: `https://example.invalid/projects/${project.slug}`,
+  const origin = siteOrigin();
+  const staticRoutes = ["", "/projects", "/guestbook"].map((path) => ({
+    url: `${origin}${path || "/"}`,
     lastModified: new Date(),
   }));
 
-  // example.invalid is a placeholder host until a production domain is chosen.
+  const projectRoutes = projects.map((project) => ({
+    url: `${origin}/projects/${project.slug}`,
+    lastModified: new Date(),
+  }));
+
   return [...staticRoutes, ...projectRoutes];
 }

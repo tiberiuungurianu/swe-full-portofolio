@@ -124,25 +124,6 @@ export const projects: Project[] = [
     hasScreenshot: false,
     previewNote: "Demo imagery not published on this site yet.",
   },
-  {
-    slug: "identity-csv-transformer",
-    title: "Identity CSV Transformer",
-    shortSummary:
-      "Identity onboarding helper focused on CSV transformation, validation feedback and outcome reporting.",
-    role: "Engineering work in an identity context.",
-    problem:
-      "Identity onboarding often depends on messy tabular inputs that need validation before they can be trusted downstream.",
-    approach:
-      "Public detail is intentionally limited. Cleared technical shape: H2/PostgreSQL, Flyway migrations, file-specific transformers, validation warnings/errors and an outcome endpoint. Client data, internals, credentials and confidential logs are excluded.",
-    technologies: ["Java ecosystem", "H2 / PostgreSQL", "Flyway"],
-    results:
-      "Detailed public case study omitted where material is not cleared for publication.",
-    status: "Limited public write-up by design.",
-    links: [],
-    featured: false,
-    hasScreenshot: false,
-    previewNote: "No public screenshot — work-related material kept minimal.",
-  },
 ];
 
 export function getProject(slug: string): Project | undefined {

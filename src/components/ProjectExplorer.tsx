@@ -6,42 +6,61 @@ import { useCallback, useId, useState } from "react";
 import type { Project } from "@/content/projects";
 
 type ProjectExplorerProps = {
+  /** Project records from `src/content/projects.ts`. */
   projects: Project[];
+  /**
+   * Slug from the URL (`/projects/rfp-finder`).
+   * When it is missing or unknown, the first project opens instead.
+   */
   initialSlug?: string;
 };
 
-function resolveInitialSlug(projects: Project[], initialSlug?: string) {
-  if (initialSlug && projects.some((project) => project.slug === initialSlug)) {
+/**
+ * Picks the project shown on the first render.
+ * A slug is the short URL id, not the visible title.
+ */
+function resolveInitialProjectSlug(projects: Project[], initialSlug?: string) {
+  const slugExistsInList = projects.some((project) => project.slug === initialSlug);
+  if (initialSlug && slugExistsInList) {
     return initialSlug;
   }
   return projects[0]?.slug;
 }
 
+/**
+ * Projects page explorer.
+ * Left column: one tab button per project. Right column: the selected project's details.
+ * Click, arrow keys, and touch all change the selection. Hover is not required.
+ */
 export function ProjectExplorer({
   projects,
   initialSlug,
 }: ProjectExplorerProps) {
-  const listId = useId();
-  const [selectedSlug, setSelectedSlug] = useState(() =>
-    resolveInitialSlug(projects, initialSlug),
+  // Unique prefix so each tab id points at the detail panel for screen readers.
+  const tabIdPrefix = useId();
+  const [selectedProjectSlug, setSelectedProjectSlug] = useState(() =>
+    resolveInitialProjectSlug(projects, initialSlug),
   );
 
-  const selected =
-    projects.find((project) => project.slug === selectedSlug) ?? projects[0];
+  const selectedProject =
+    projects.find((project) => project.slug === selectedProjectSlug) ??
+    projects[0];
 
-  const selectByOffset = useCallback(
-    (offset: number) => {
-      if (!selected) return;
-      const index = projects.findIndex(
-        (project) => project.slug === selected.slug,
+  /** Moves to a neighbour. +1 is next, -1 is previous. The list wraps at both ends. */
+  const selectAdjacentProject = useCallback(
+    (step: number) => {
+      if (!selectedProject) return;
+      const selectedIndex = projects.findIndex(
+        (project) => project.slug === selectedProject.slug,
       );
-      const next = projects[(index + offset + projects.length) % projects.length];
-      setSelectedSlug(next.slug);
+      const wrappedIndex =
+        (selectedIndex + step + projects.length) % projects.length;
+      setSelectedProjectSlug(projects[wrappedIndex].slug);
     },
-    [projects, selected],
+    [projects, selectedProject],
   );
 
-  if (!selected) {
+  if (!selectedProject) {
     return <p>No projects to show yet.</p>;
   }
 
@@ -49,29 +68,29 @@ export function ProjectExplorer({
     <div className="project-explorer">
       <div className="project-explorer__list" role="tablist" aria-label="Projects">
         {projects.map((project) => {
-          const selectedItem = project.slug === selected.slug;
+          const isActiveTab = project.slug === selectedProject.slug;
           return (
             <button
               key={project.slug}
               type="button"
               role="tab"
-              id={`${listId}-${project.slug}`}
-              aria-selected={selectedItem}
-              aria-controls={`${listId}-panel`}
+              id={`${tabIdPrefix}-${project.slug}`}
+              aria-selected={isActiveTab}
+              aria-controls={`${tabIdPrefix}-panel`}
               className={
-                selectedItem
+                isActiveTab
                   ? "project-explorer__tab is-active"
                   : "project-explorer__tab"
               }
-              onClick={() => setSelectedSlug(project.slug)}
+              onClick={() => setSelectedProjectSlug(project.slug)}
               onKeyDown={(event) => {
                 if (event.key === "ArrowDown" || event.key === "ArrowRight") {
                   event.preventDefault();
-                  selectByOffset(1);
+                  selectAdjacentProject(1);
                 }
                 if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
                   event.preventDefault();
-                  selectByOffset(-1);
+                  selectAdjacentProject(-1);
                 }
               }}
             >
@@ -87,17 +106,18 @@ export function ProjectExplorer({
       <article
         className="project-explorer__panel"
         role="tabpanel"
-        id={`${listId}-panel`}
-        aria-labelledby={`${listId}-${selected.slug}`}
+        id={`${tabIdPrefix}-panel`}
+        aria-labelledby={`${tabIdPrefix}-${selectedProject.slug}`}
       >
         <p className="eyebrow">selected project</p>
-        <h2>{selected.title}</h2>
-        <p className="lede">{selected.shortSummary}</p>
+        <h2>{selectedProject.title}</h2>
+        <p className="lede">{selectedProject.shortSummary}</p>
 
+        {/* No screenshot yet: show the honest note instead of a made-up image. */}
         <div className="project-preview" aria-hidden={false}>
-          {selected.hasScreenshot ? null : (
+          {selectedProject.hasScreenshot ? null : (
             <div className="project-preview__neutral">
-              <span>{selected.previewNote}</span>
+              <span>{selectedProject.previewNote}</span>
             </div>
           )}
         </div>
@@ -105,22 +125,22 @@ export function ProjectExplorer({
         <dl className="detail-list">
           <div>
             <dt>Role</dt>
-            <dd>{selected.role}</dd>
+            <dd>{selectedProject.role}</dd>
           </div>
           <div>
             <dt>Problem</dt>
-            <dd>{selected.problem}</dd>
+            <dd>{selectedProject.problem}</dd>
           </div>
           <div>
             <dt>Approach</dt>
-            <dd>{selected.approach}</dd>
+            <dd>{selectedProject.approach}</dd>
           </div>
           <div>
             <dt>Technologies</dt>
             <dd>
               <ul className="chip-list">
-                {selected.technologies.map((tech) => (
-                  <li key={tech}>{tech}</li>
+                {selectedProject.technologies.map((technologyName) => (
+                  <li key={technologyName}>{technologyName}</li>
                 ))}
               </ul>
             </dd>
@@ -128,24 +148,27 @@ export function ProjectExplorer({
           <div>
             <dt>Results / status</dt>
             <dd>
-              {selected.results} {selected.status}
+              {selectedProject.results} {selectedProject.status}
             </dd>
           </div>
         </dl>
 
         <div className="inline-actions">
-          <Link className="button button--primary" href={`/projects/${selected.slug}`}>
+          <Link
+            className="button button--primary"
+            href={`/projects/${selectedProject.slug}`}
+          >
             open project page
           </Link>
-          {selected.links.map((link) => (
+          {selectedProject.links.map((externalLink) => (
             <a
-              key={link.href}
+              key={externalLink.href}
               className="button button--ghost"
-              href={link.href}
+              href={externalLink.href}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {link.label}
+              {externalLink.label}
             </a>
           ))}
         </div>
