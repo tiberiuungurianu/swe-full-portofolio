@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ProjectNotes } from "@/components/ProjectNotes";
 import { projects, getProject } from "@/content/projects";
 
 type ProjectPageProps = {
@@ -80,6 +81,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <dd>{project.status}</dd>
           </div>
         </dl>
+
+        {project.sections ? <ProjectNotes sections={project.sections} /> : null}
 
         <div className="inline-actions">
           <Link className="button button--primary" href="/projects">
