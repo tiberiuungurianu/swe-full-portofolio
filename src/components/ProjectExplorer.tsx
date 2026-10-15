@@ -29,7 +29,7 @@ function resolveInitialProjectSlug(projects: Project[], initialSlug?: string) {
 
 /**
  * Projects page explorer.
- * Left column: one tab button per project. Right column: the selected project's details.
+ * Left column: project mini menu. Right column: the selected project's details.
  * Click, arrow keys, and touch all change the selection. Hover is not required.
  */
 export function ProjectExplorer({
@@ -66,7 +66,11 @@ export function ProjectExplorer({
 
   return (
     <div className="project-explorer">
-      <div className="project-explorer__list" role="tablist" aria-label="Projects">
+      <div
+        className="project-mini-menu"
+        role="tablist"
+        aria-label="Project mini menu"
+      >
         {projects.map((project) => {
           const isActiveTab = project.slug === selectedProject.slug;
           return (
@@ -79,8 +83,8 @@ export function ProjectExplorer({
               aria-controls={`${tabIdPrefix}-panel`}
               className={
                 isActiveTab
-                  ? "project-explorer__tab is-active"
-                  : "project-explorer__tab"
+                  ? "project-mini-menu__item is-active"
+                  : "project-mini-menu__item"
               }
               onClick={() => setSelectedProjectSlug(project.slug)}
               onKeyDown={(event) => {
@@ -94,8 +98,8 @@ export function ProjectExplorer({
                 }
               }}
             >
-              <span className="project-explorer__tab-title">{project.title}</span>
-              <span className="project-explorer__tab-summary">
+              <span className="project-mini-menu__title">{project.title}</span>
+              <span className="project-mini-menu__summary">
                 {project.shortSummary}
               </span>
             </button>
@@ -113,20 +117,7 @@ export function ProjectExplorer({
         <h2>{selectedProject.title}</h2>
         <p className="lede">{selectedProject.shortSummary}</p>
 
-        {/* No screenshot yet: show the honest note instead of a made-up image. */}
-        <div className="project-preview" aria-hidden={false}>
-          {selectedProject.hasScreenshot ? null : (
-            <div className="project-preview__neutral">
-              <span>{selectedProject.previewNote}</span>
-            </div>
-          )}
-        </div>
-
         <dl className="detail-list">
-          <div>
-            <dt>Role</dt>
-            <dd>{selectedProject.role}</dd>
-          </div>
           <div>
             <dt>Problem</dt>
             <dd>{selectedProject.problem}</dd>

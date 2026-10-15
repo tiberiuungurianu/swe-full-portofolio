@@ -10,7 +10,15 @@ const INSPECT_LINES = [
 
 const DOCK_GAP_PX = 170;
 
+/**
+ * True when DevTools is docked beside or under a desktop page.
+ * Skip phone layouts and Chrome device-mode: both shrink `innerWidth`
+ * while `outerWidth` stays large, which used to look like a side dock.
+ */
 function devtoolsAreDocked() {
+  if (window.innerWidth < 700 || window.innerHeight < 500) return false;
+  if (window.matchMedia("(pointer: coarse)").matches) return false;
+
   const widthGap = window.outerWidth - window.innerWidth;
   const heightGap = window.outerHeight - window.innerHeight;
   const sideDock = widthGap > DOCK_GAP_PX && heightGap < DOCK_GAP_PX;

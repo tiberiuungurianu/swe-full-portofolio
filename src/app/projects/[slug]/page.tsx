@@ -43,17 +43,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <h1 className="section-heading">{project.title}</h1>
         <p className="lede">{project.shortSummary}</p>
 
-        <div className="project-preview">
-          <div className="project-preview__neutral">
-            <span>{project.previewNote}</span>
-          </div>
-        </div>
-
         <dl className="detail-list">
-          <div>
-            <dt>Role / contribution</dt>
-            <dd>{project.role}</dd>
-          </div>
           <div>
             <dt>Problem</dt>
             <dd>{project.problem}</dd>

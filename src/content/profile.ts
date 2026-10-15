@@ -10,7 +10,7 @@ export const profile = {
   monogramLabel: "tu",
   shortIntro: "hi, i’m tiberiu.",
   positioning:
-    "A software engineer with a passion for algorithms, finance and building things.",
+    "A new kind of software engineer",
   location: "London, United Kingdom",
   bio: [
     "I’m a London-based software engineer with a particular interest in cybersecurity, algorithms and finance.",
@@ -18,8 +18,13 @@ export const profile = {
   ],
   bioAside:
     "(Usually because something repetitive has annoyed me enough to automate it, tehehe.)",
-  research:
-    "My final-year research explored how websites can be designed and built more sustainably. I developed a framework to support this, and the research was later published at IEEE in 2026 and was presented at SNAMS 2025.",
+  research: {
+    before: "My ",
+    linkedPhrase: "final-year research",
+    after:
+      " explored how websites can be designed and built more sustainably. I developed a framework to support this, and the research was later published at IEEE in 2026 and was presented at SNAMS 2025.",
+    href: "/projects/green-website-investigation",
+  },
   skills: {
     languages: ["Python", "Java", "C++", "SQL", "C#"],
     frameworks: ["React / TypeScript", "Spring Boot", "FastAPI", "ASP.NET MVC"],

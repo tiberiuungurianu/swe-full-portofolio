@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { profile } from "@/content/profile";
 
 /** About copy. The aside is the smaller, quieter line. */
@@ -13,7 +15,13 @@ export function AboutSection() {
         </p>
       ))}
       <p className="about-aside">{profile.bioAside}</p>
-      <p className="section-intro">{profile.research}</p>
+      <p className="section-intro">
+        {profile.research.before}
+        <Link className="inline-quiet-link" href={profile.research.href}>
+          {profile.research.linkedPhrase}
+        </Link>
+        {profile.research.after}
+      </p>
     </section>
   );
 }

@@ -25,7 +25,6 @@ export type Project = {
   slug: string;
   title: string;
   shortSummary: string;
-  role: string;
   problem: string;
   approach: string;
   technologies: string[];
@@ -33,9 +32,6 @@ export type Project = {
   status: string;
   links: ProjectLink[];
   featured: boolean;
-  /** When false, show an honest neutral preview instead of inventing media. */
-  hasScreenshot: boolean;
-  previewNote: string;
   /** Longer build notes. Omitted projects keep the short summary only. */
   sections?: ProjectSection[];
 };
@@ -46,7 +42,6 @@ export const projects: Project[] = [
     title: "PennyPilot",
     shortSummary:
       "Local-first personal finance. Python reads bank-statement PDFs on your machine and serves a small dashboard over localhost.",
-    role: "Solo builder.",
     problem:
       "Bank PDFs are awkward when you want spending, budgets, recurring payments, and what is safe to spend. Those statements should stay on the machine that already has the files.",
     approach:
@@ -71,8 +66,6 @@ export const projects: Project[] = [
       },
     ],
     featured: true,
-    hasScreenshot: false,
-    previewNote: "No public screenshot — the dashboard only runs on localhost.",
     sections: [
       {
         heading: "Languages",
@@ -169,7 +162,6 @@ export const projects: Project[] = [
     title: "CodePop",
     shortSummary:
       "Chrome extension (Manifest V3) that records every LeetCode attempt — Accepted, Wrong Answer, TLE and errors — and commits each one to your GitHub repo.",
-    role: "Solo builder.",
     problem:
       "Most LeetCode → GitHub tools only keep Accepted solutions. The failed attempts, where most of the learning happens, disappear.",
     approach:
@@ -191,15 +183,12 @@ export const projects: Project[] = [
       },
     ],
     featured: true,
-    hasScreenshot: false,
-    previewNote: "Extension UI screenshot not linked yet.",
   },
   {
     slug: "green-website-investigation",
     title: "Green Website Investigation",
     shortSummary:
       "Final-year research at London Metropolitan University on sustainable website design: an optimised London Library prototype, measured against the original, and published at IEEE SNAMS.",
-    role: "Research lead and full-stack engineer on a final-year project, supervised by Dr Sahar Al-Sudani.",
     problem:
       "The dissertation asked how websites could be designed and developed more sustainably, and produced a framework for that work. The recorded title is Investigating Green Website Design: Developing a Carbon-Neutral Website for the Digital Future Through Optimised Web Solutions.",
     approach:
@@ -243,8 +232,6 @@ export const projects: Project[] = [
       },
     ],
     featured: true,
-    hasScreenshot: false,
-    previewNote: "Screenshot not available yet — use the live prototype link.",
     sections: [
       {
         heading: "Research",
@@ -408,7 +395,6 @@ export const projects: Project[] = [
     title: "Password Manager & Strength Analyser",
     shortSummary:
       "A C# ASP.NET project that connects software engineering with cybersecurity — vault flows, strength analysis and security-minded coursework decisions.",
-    role: "Software developer on a two-person academic team project.",
     problem:
       "Weak and reused passwords are common. The brief asked for a managed vault with strength analysis, reuse detection and role-aware access.",
     approach:
@@ -431,15 +417,12 @@ export const projects: Project[] = [
       },
     ],
     featured: true,
-    hasScreenshot: false,
-    previewNote: "No project screenshot linked yet.",
   },
   {
     slug: "romanian-orthodox-calendar",
     title: "Romanian Orthodox Calendar",
     shortSummary:
       "A personal utility I needed: a Romanian Orthodox calendar you can subscribe to as an iCalendar feed.",
-    role: "Solo builder.",
     problem:
       "I wanted saints, feasts and fasting days in the calendar apps I already use — without rebuilding the year by hand every season.",
     approach:
@@ -459,15 +442,12 @@ export const projects: Project[] = [
       },
     ],
     featured: true,
-    hasScreenshot: false,
-    previewNote: "Open the live site for the current calendar UI.",
   },
   {
     slug: "bubbled-mvp",
     title: "Bubbled",
     shortSummary:
       "EdTech product work from the London Metropolitan × FounderMatcha hackathon through a Founder’s Associate internship — now live at gobubbled.com.",
-    role: "Hackathon contributor, then Founder’s Associate Intern supporting product and front-end delivery.",
     problem:
       "Students aiming for universities abroad need guidance that feels personal and practical, not a five-figure agency black box.",
     approach:
@@ -483,8 +463,6 @@ export const projects: Project[] = [
       },
     ],
     featured: true,
-    hasScreenshot: false,
-    previewNote: "Use the live Bubbled site for current product UI.",
   },
 ];
 

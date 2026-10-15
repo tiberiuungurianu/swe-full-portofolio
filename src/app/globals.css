@@ -509,6 +509,23 @@ a:hover {
   max-width: 40rem;
 }
 
+.inline-quiet-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-line) 85%, transparent);
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+  transition:
+    color 160ms ease,
+    text-decoration-color 160ms ease;
+}
+
+.inline-quiet-link:hover,
+.inline-quiet-link:focus-visible {
+  color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
+}
+
 /* Quieter about-me line: smaller type and a darker grey than the paragraphs around it. */
 .about-aside {
   margin: 0 auto;
@@ -603,18 +620,21 @@ a:hover {
   }
 }
 
-.project-explorer__list {
+/* Project list as an indented mini menu; open item uses accent lime. */
+.project-mini-menu {
   display: grid;
-  gap: 0.5rem;
+  gap: 0.45rem;
+  margin-left: 1.25rem;
+  padding: 0.4rem 0 0.4rem 1rem;
+  border-left: 1px solid color-mix(in srgb, var(--color-accent) 35%, var(--color-line));
 }
 
-.project-explorer__tab {
+.project-mini-menu__item {
   text-align: left;
   border: 1px solid transparent;
-  border-bottom-color: var(--color-line);
   background: transparent;
   color: inherit;
-  padding: 0.85rem 0.7rem;
+  padding: 0.75rem 0.8rem;
   border-radius: var(--radius-sm);
   cursor: pointer;
   font: inherit;
@@ -622,26 +642,32 @@ a:hover {
   gap: 0.25rem;
   transition:
     background-color 160ms ease,
-    border-color 160ms ease;
+    border-color 160ms ease,
+    color 160ms ease;
 }
 
-.project-explorer__tab:hover,
-.project-explorer__tab:focus-visible {
+.project-mini-menu__item:hover,
+.project-mini-menu__item:focus-visible {
   background: color-mix(in srgb, var(--color-bg-elevated) 80%, transparent);
+  border-color: color-mix(in srgb, var(--color-line) 70%, transparent);
 }
 
-.project-explorer__tab.is-active {
+.project-mini-menu__item.is-active {
   background: var(--color-bg-elevated);
-  border-color: var(--color-line);
+  border-color: var(--color-accent);
   box-shadow: var(--shadow-soft);
 }
 
-.project-explorer__tab-title {
+.project-mini-menu__item.is-active .project-mini-menu__title {
+  color: var(--color-accent);
+}
+
+.project-mini-menu__title {
   font-family: var(--font-display);
   font-size: 1.1rem;
 }
 
-.project-explorer__tab-summary {
+.project-mini-menu__summary {
   color: var(--color-muted);
   font-size: 0.9rem;
   display: -webkit-box;
@@ -654,17 +680,6 @@ a:hover {
   display: grid;
   gap: 1rem;
   padding: 0.25rem 0;
-}
-
-.project-preview__neutral {
-  min-height: 12rem;
-  border: 1px dashed var(--color-line);
-  background: var(--color-bg-elevated);
-  display: grid;
-  place-items: center;
-  padding: 1.5rem;
-  color: var(--color-muted);
-  text-align: center;
 }
 
 .detail-list {
