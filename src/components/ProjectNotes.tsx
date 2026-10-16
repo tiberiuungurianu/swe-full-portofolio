@@ -41,43 +41,42 @@ export function ProjectNotes({ sections }: ProjectNotesProps) {
             </ul>
           ) : null}
           {section.table ? (
-            <table
-              className={
-                section.table.columns.length > 2
-                  ? "store-table store-table--labeled"
-                  : "store-table"
-              }
-            >
-              <thead>
-                <tr>
-                  {section.table.columns.map((column) => (
-                    <th key={column} scope="col">
-                      {column}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {section.table.rows.map((row) => (
-                  <tr key={row[0]}>
-                    {row.map((cell, index) =>
-                      index === 0 ? (
-                        <th key={`${row[0]}-0`} scope="row">
-                          <RichText text={cell} />
-                        </th>
-                      ) : (
-                        <td
-                          key={`${row[0]}-${index}`}
-                          data-label={section.table?.columns[index]}
-                        >
-                          <RichText text={cell} />
-                        </td>
-                      ),
-                    )}
+            <div className="store-table-scroll">
+              <table
+                className={
+                  section.table.columns.length > 2
+                    ? "store-table store-table--compare"
+                    : "store-table"
+                }
+              >
+                <thead>
+                  <tr>
+                    {section.table.columns.map((column) => (
+                      <th key={column} scope="col">
+                        {column}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {section.table.rows.map((row) => (
+                    <tr key={row[0]}>
+                      {row.map((cell, index) =>
+                        index === 0 ? (
+                          <th key={`${row[0]}-0`} scope="row">
+                            <RichText text={cell} />
+                          </th>
+                        ) : (
+                          <td key={`${row[0]}-${index}`}>
+                            <RichText text={cell} />
+                          </td>
+                        ),
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : null}
         </section>
       ))}
